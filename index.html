@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight Tracker - Sheikh</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Weight<span class="highlight">Tracker</span></h1>
+            <p>Let's get you started on your health journey!</p>
+        </header>
+
+        <main style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+            <div class="glass-card" style="max-width: 400px; width: 100%;">
+                <h3 style="margin-bottom: 1.5rem; text-align: center;">Welcome to WeightTracker!</h3>
+                <form id="setup-form">
+                    <div class="input-group">
+                        <label for="setup-name">Name</label>
+                        <input type="text" id="setup-name" placeholder="Your name" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="setup-height">Height (cm)</label>
+                        <input type="number" id="setup-height" placeholder="e.g. 175" min="50" max="300" required>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="setup-weight">Current Weight (kg)</label>
+                            <input type="number" id="setup-weight" step="0.1" placeholder="e.g. 70.0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="setup-target">Target Weight (kg)</label>
+                            <input type="number" id="setup-target" step="0.1" placeholder="e.g. 65.0" required>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Get Started</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'weight_tracker_data';
+        const HEIGHT_KEY = 'weight_tracker_height';
+        const GOAL_KEY = 'weight_tracker_goal';
+        const NAME_KEY = 'weight_tracker_name';
+        const SETUP_KEY = 'weight_tracker_setup';
+
+        document.getElementById('setup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('setup-name').value;
+            const height = parseFloat(document.getElementById('setup-height').value);
+            const weight = parseFloat(document.getElementById('setup-weight').value);
+            const target = parseFloat(document.getElementById('setup-target').value);
+
+            // Save user data
+            localStorage.setItem(NAME_KEY, name);
+            localStorage.setItem(HEIGHT_KEY, height);
+            localStorage.setItem(GOAL_KEY, target);
+            localStorage.setItem(SETUP_KEY, 'true');
+
+            // Add initial weight entry
+            const weights = [{
+                id: Date.now().toString(),
+                date: (() => {
+                    const d = new Date();
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                })(),
+                weight: weight
+            }];
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(weights));
+
+            // Redirect to main app
+            window.location.href = 'main.html';
+        });
+    </script>
+</body>
+
+</html>

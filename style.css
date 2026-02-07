@@ -1,0 +1,550 @@
+:root {
+    --bg-color: #f6f8fa;
+    --card-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --text-primary: #1f2328;
+    --text-secondary: #656d76;
+    --accent-color: #0969da;
+    --accent-glow: rgba(9, 105, 218, 0.2);
+    --success-color: #1a7f37;
+    --danger-color: #cf222e;
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --font-main: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(9, 105, 218, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(26, 127, 55, 0.08) 0%, transparent 20%);
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .metrics-cards {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 0.8rem;
+    }
+
+    .metric {
+        align-items: center;
+        text-align: center;
+    }
+
+    .glass-card {
+        padding: 1rem;
+    }
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* Header */
+.app-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.app-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+}
+
+.app-header .highlight {
+    color: var(--accent-color);
+}
+
+.app-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    box-shadow: 0 8px 32px -1px rgba(0, 0, 0, 0.3);
+}
+
+/* Metrics */
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.metrics-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.metric h3 {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.metric p {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.metric span {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* Chart */
+.chart-container {
+    width: 100%;
+}
+
+.canvas-wrapper {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    overflow-y: hidden;
+    /* Custom scrollbar styling for this container */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.chart-scroll-inner {
+    position: relative;
+    height: 100%;
+    /* Width will be set dynamically via JS */
+    min-width: 100%;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.glass-btn {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.glass-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.circle-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.glass-btn.primary-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+}
+
+.glass-btn.primary-btn:hover {
+    background-color: #085ebd;
+    /* Darker shade of accent */
+    box-shadow: 0 8px 16px rgba(9, 105, 218, 0.3);
+}
+
+/* Modal Headers */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.close-modal {
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.5rem;
+}
+
+#weight-form,
+#setup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.input-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.input-row .input-group {
+    flex: 1;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.input-group label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.8rem 0;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s;
+    border-radius: 0;
+}
+
+input:focus {
+    border-bottom-color: var(--accent-color);
+    box-shadow: 0 1px 0 0 var(--accent-color);
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.form-actions .btn-primary {
+    margin-top: 0;
+    flex: 1;
+}
+
+.form-actions .btn-secondary {
+    padding: 1rem;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.form-actions .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* History List */
+.history-section {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.history-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.history-item:hover {
+    border-color: var(--glass-border);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.history-date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.history-weight {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-right: 1rem;
+}
+
+.action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s, color 0.2s;
+    font-size: 1.1rem;
+    margin-left: 0.5rem;
+    padding: 4px;
+}
+
+.action-btn:hover {
+    opacity: 1;
+}
+
+.edit-btn {
+    color: var(--accent-color);
+}
+
+.delete-btn {
+    color: var(--danger-color);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Metric Header & Icon Btn */
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.metric-header h3 {
+    margin-bottom: 0;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    padding: 2px;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.metric-sub {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: -0.2rem;
+}
+
+/* Modal */
+.glass-modal {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 2rem;
+    color: var(--text-primary);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    margin: auto;
+    max-width: 400px;
+    width: 90%;
+}
+
+.glass-modal::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+}
+
+.glass-modal h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive: small screens show two metric cards per row */
+@media (max-width: 480px) {
+    .metrics-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+    }
+
+    .metric {
+        align-items: center;
+        text-align: center;
+        padding: 0.6rem;
+    }
+
+    .glass-card {
+        padding: 1rem;
+        border-radius: 16px;
+    }
+
+    .metric p {
+        font-size: 1.6rem;
+    }
+
+    .metric h3 {
+        font-size: 0.8rem;
+    }
+
+    .canvas-wrapper {
+        height: 220px;
+    }
+
+    .input-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .app-header h1 {
+        font-size: 2rem;
+    }
+
+    .app-header p {
+        font-size: 1rem;
+    }
+
+    #setup-form {
+        gap: 0.8rem;
+    }
+
+    #setup-form .input-group {
+        gap: 0.1rem;
+    }
+
+    #setup-form label {
+        font-size: 0.8rem;
+    }
+
+    #setup-form input {
+        padding: 0.6rem 0;
+        font-size: 0.9rem;
+    }
+
+    #setup-form h3 {
+        font-size: 1.2rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    #setup-form .btn-primary {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+}

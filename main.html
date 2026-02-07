@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight Tracker - sheikh</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // If the user hasn't completed setup, redirect to the setup page
+        (function () {
+            try {
+                const SETUP_KEY = 'weight_tracker_setup';
+                if (!localStorage.getItem(SETUP_KEY)) {
+                    window.location.href = 'index.html';
+                }
+            } catch (e) {
+                // ignore (e.g., localStorage disabled)
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Weight<span class="highlight">Tracker</span></h1>
+            <p id="welcome-msg">Monitor your progress, stay healthy.</p>
+        </header>
+
+        <main class="dashboard-grid">
+            <!-- Metrics Section -->
+            <section class="metrics-cards">
+                <div class="glass-card metric">
+                    <h3>Current Weight</h3>
+                    <p id="current-weight">-- <span>kg</span></p>
+                    <p id="start-weight" style="font-size: 1rem; margin-top: 0.5rem; color: var(--text-secondary);">
+                        Start: -- <span>kg</span></p>
+                </div>
+                <div class="glass-card metric">
+                    <div class="metric-header">
+                        <h3>Target</h3>
+                        <button id="goal-btn" class="icon-btn" title="Set Goal">🎯</button>
+                    </div>
+                    <p id="goal-display">--</p>
+                    <span id="goal-progress" class="metric-sub">Set Goal</span>
+                </div>
+                <div class="glass-card metric">
+                    <div class="metric-header">
+                        <h3>BMI</h3>
+                        <button id="height-btn" class="icon-btn" title="Set Height">📏</button>
+                    </div>
+                    <p id="bmi-display">--</p>
+                    <span id="bmi-category" class="metric-sub">Set Height</span>
+                    <span id="goal-bmi" class="metric-sub"
+                        style="display:block; margin-top: 0.2rem; font-size: 0.8rem; opacity: 0.8;"></span>
+                </div>
+                <div class="glass-card metric">
+                    <div class="metric-header">
+                        <h3 id="change-label">Total Change</h3>
+                        <button id="change-mode-btn" class="icon-btn" title="Switch View">🔄</button>
+                    </div>
+                    <p id="total-change">-- <span>kg</span></p>
+                    <span id="change-subtitle" class="metric-sub">Since Start</span>
+                </div>
+
+            </section>
+
+            <!-- Chart Section -->
+            <section class="glass-card chart-container">
+                <h2>Weight Trend</h2>
+                <div class="canvas-wrapper">
+                    <div class="chart-scroll-inner">
+                        <canvas id="weightChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="action-buttons">
+                <button id="open-history-btn" class="glass-btn">Recent</button>
+                <button id="open-add-btn" class="glass-btn primary-btn circle-btn">+</button>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Record Modal -->
+    <dialog id="add-modal" class="glass-modal">
+        <div class="modal-header">
+            <h3>Add Record</h3>
+            <button class="icon-btn close-modal" id="close-add-btn">&times;</button>
+        </div>
+        <form id="weight-form">
+            <div class="input-group">
+                <label for="weight-input">Weight (kg)</label>
+                <input type="number" id="weight-input" step="0.1" placeholder="0.0" required>
+            </div>
+            <div class="input-group">
+                <label for="date-input">Date</label>
+                <input type="date" id="date-input" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="submit-btn" class="btn-primary">Add Entry</button>
+                <button type="button" id="cancel-edit-btn" class="btn-secondary" style="display: none;">Cancel</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- History Modal -->
+    <dialog id="history-modal" class="glass-modal">
+        <div class="modal-header">
+            <h3>Recent History</h3>
+            <button class="icon-btn close-modal" id="close-history-modal-btn">&times;</button>
+        </div>
+        <ul id="history-list" class="history-list">
+            <!-- Items injected here -->
+        </ul>
+    </dialog>
+
+    <!-- Height Modal -->
+    <dialog id="height-modal" class="glass-modal">
+        <form method="dialog">
+            <h3>Enter Height</h3>
+            <div class="input-group">
+                <label for="height-input">Height (cm)</label>
+                <input type="number" id="height-input" placeholder="e.g. 175" min="50" max="300">
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="close-modal-btn" class="btn-secondary">Cancel</button>
+                <button type="submit" id="save-height-btn" class="btn-primary">Save</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Goal Modal -->
+    <dialog id="goal-modal" class="glass-modal">
+        <form method="dialog">
+            <h3>Set Target Weight</h3>
+            <div class="input-group">
+                <label for="goal-input">Target Weight (kg)</label>
+                <input type="number" id="goal-input" step="0.1" placeholder="e.g. 70.0">
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="close-goal-modal-btn" class="btn-secondary">Cancel</button>
+                <button type="submit" id="save-goal-btn" class="btn-primary">Save</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

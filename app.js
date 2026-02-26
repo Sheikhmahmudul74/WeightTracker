@@ -509,7 +509,7 @@ function renderChart() {
                         color: 'rgba(0, 0, 0, 0.05)'
                     },
                     suggestedMin: 40,
-                    suggestedMax: 120
+                    suggestedMax: 70,
                 }
             }
         }
